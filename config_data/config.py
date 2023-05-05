@@ -5,7 +5,6 @@ from environs import Env
 @dataclass
 class TgBot:
     token: str
-    admin_ids: list[int]
 
 # Класс конфигурации
 @dataclass
@@ -13,7 +12,7 @@ class Config:
     tg_bot: TgBot
 
 # Функция получения конфигурации
-def load_config(path: str) -> Config:
+def load_config(path: str = None) -> Config:
     env = Env()
     env.read_env(path)
 

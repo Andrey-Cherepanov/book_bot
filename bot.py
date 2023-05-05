@@ -3,15 +3,15 @@ import logging
 
 from aiogram import Bot, Dispatcher
 
-from config_data import Config, load_config
+from config_data.config import Config, load_config
 
 # init logger
-logger = logging.getLogger(__main__)
+logger = logging.getLogger(__name__)
 
 # bot main func
 async def main():
     # config logging
-    logger.basicConfig(level=logging.INFO,
+    logging.basicConfig(level=logging.INFO,
                        format='%(filename)s:%(lineno)d #%(levelname)-8s '
                        '[%(asctime)s] - %(name)s - %(message)s')
     logger.info('Starting bot')
@@ -21,7 +21,7 @@ async def main():
 
     # init bot and dispatcher objects
     bot = Bot(token=config.tg_bot.token,
-              parse_mod='HTML')
+              parse_mode='HTML')
     dp = Dispatcher()
 
     # set main menu
