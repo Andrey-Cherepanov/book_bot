@@ -1,7 +1,7 @@
 from aiogram import Bot
 from aiogram.types import BotCommand
 
-from lexicon import LEXICON_COMMANDS
+from lexicon.lexicon import LEXICON_COMMANDS
 
 async def set_main_menu(bot: Bot):
     main_menu_commands = [BotCommand(
