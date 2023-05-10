@@ -103,3 +103,27 @@ async def process_forward_press(callback):
             )
         )
     await callback.answer()
+
+# Key with current page on inline kb
+# add a new bookmark
+@router.callback_query(lambda x: '/' in x.data and x.data.replace('/', '').isdigit())
+async def process_bookmark_press(callback):
+    id = callback.from_user.id
+    curr_page = database.get_current_page(id)
+    database.add_bookmark(id, curr_page)
+    await callback.answer(LEXICON['new_bookmark'])
+
+
+# Key with bookmark
+# sending user a page from bookmark
+@router.callback_query(IsDigitCallbackData())
+async def process_bookmark_press(callback):
+    text = book[int(callback.data)]
+    database.set_current_page(callback.from_user.id, int(callback.data))
+    await callback.message.edit_text(
+                text=text,
+                reply_markup=create_pagination_keyboard(
+                    'backward',
+                    f'{int(callback.data)}/{len(book)}',
+                    'forward'))
+    await callback.answer()
