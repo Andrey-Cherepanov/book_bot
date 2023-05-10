@@ -83,3 +83,23 @@ async def process_forward_press(callback):
             )
         )
     await callback.answer()
+
+
+# Key Backward on inline kb
+# sending user previous page
+@router.callback_query(Text(text='forward'))
+async def process_forward_press(callback):
+    id = callback.from_user.id
+    page = database.get_current_page(id) - 1
+    if page >= 1:
+        database.set_current_page(id=id, page=page)
+        text = book[page]
+        await callback.message.edit_text(
+            text=text,
+            reply_markup=create_pagination_keyboard(
+                'backward',
+                f'{database.get_current_page(id)}/{len(book)}',
+                'forward'
+            )
+        )
+    await callback.answer()
