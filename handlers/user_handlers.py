@@ -51,3 +51,15 @@ async def process_continue_command(message):
                 'forward'
             )
     )
+
+# Command /bookmarks
+@router.message(Command(commands='bookmarks'))
+async def process_continue_command(message):
+    bookmarks = database.extract_bookmarks(message.from_user.id)
+    if bookmarks:
+        await message.answer(
+            text=LEXICON['/bookmarks'],
+            reply_markup=create_bookmarks_keyboard(*bookmarks)
+        )
+    else:
+        await message.answer(text=LEXICON['no_bookmarks'])
