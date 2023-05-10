@@ -1,5 +1,6 @@
 book: dict[int, str] = {}
 PAGE_SIZE = 1050
+BOOK_PATH = 'book/book.txt'
 
 def _get_part_text(text, start, page_size):
     marks = ',.!?:;'
@@ -12,20 +13,22 @@ def _get_part_text(text, start, page_size):
             text = text[:-1]
     else:
         text = text[:page_size]
-    while text[-1] not in marks:
+    while text and text[-1] not in marks:
         text = text[:-1]
     return text, len(text)
 
 def prepare_book(path: str) -> None:
-    with open(path, 'r') as f:
-        text = f.read()
-        page = 1
-        start = 0
-        size = 0
-        while start < len(text):
-            page_text, size = _get_part_text(text, start, PAGE_SIZE)
-            book[page] = page_text.lstrip()
-            page += 1
-            start += size
+    with open(path, encoding='utf-8') as file:
+        text = file.read()
+    global PAGE_SIZE, book
+    start = counter = 0
+    while start < len(text):
+        counter += 1
+        prepared_page = _get_part_text(text, start, PAGE_SIZE)
+        if not prepared_page[0].lstrip():
+            print(prepared_page[0])
+            break
+        book[counter] = prepared_page[0].lstrip()
+        start += prepared_page[1]
 
-prepare_book('book/book.txt')
+prepare_book(BOOK_PATH)

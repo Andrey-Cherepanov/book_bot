@@ -87,7 +87,7 @@ async def process_forward_press(callback):
 
 # Key Backward on inline kb
 # sending user previous page
-@router.callback_query(Text(text='forward'))
+@router.callback_query(Text(text='backward'))
 async def process_forward_press(callback):
     id = callback.from_user.id
     page = database.get_current_page(id) - 1
@@ -147,14 +147,14 @@ async def process_cancel_press(callback: CallbackQuery):
     await callback.answer()
 
 # Key del bookmark
-@router.callback_query(IsDelBookmarkCallbackData)
+@router.callback_query(IsDelBookmarkCallbackData())
 async def process_del_bookmark_press(callback):
     database.remove_bookmark(callback.from_user.id, int(callback.data[:-3]))
-    if database.xtract_bookmarks(callback.from_user.id):
+    if database.extract_bookmarks(callback.from_user.id):
         await callback.message.edit_text(
                     text=LEXICON['/bookmarks'],
                     reply_markup=create_edit_keyboard(
                             *database.extract_bookmarks(callback.from_user.id)))
     else:
         await callback.message.edit_text(text=LEXICON['no_bookmarks'])
-    await.callback.answer()
+    await callback.answer()

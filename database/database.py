@@ -49,7 +49,7 @@ def _is_user_in_db(id):
 def get_current_page(id):
     user = list(select(bm for bm in Bookmarks
                         if bm.id_user==id))[0]
-    return use.curr_page
+    return user.curr_page
 
 @db_session
 def remove_bookmark(id, bookmark):
@@ -57,7 +57,7 @@ def remove_bookmark(id, bookmark):
                         if bm.id_user==id))[0]
     new_bookmarks = extract_bookmarks(id)
     new_bookmarks.remove(bookmark)
-    if bookmarks:
+    if new_bookmarks:
         new_bookmarks = ','.join(list(map(str, new_bookmarks)))
     else:
         new_bookmarks = ''
