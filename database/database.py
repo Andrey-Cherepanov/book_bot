@@ -45,3 +45,9 @@ def add_bookmark(id, bookmark):
 def _is_user_in_db(id):
     ids = [usr.id_user for usr in list(select(usr for usr in Bookmarks))]
     return id in ids
+
+@db_session
+def get_current_page(id):
+    user = list(select(bm for bm in Bookmarks
+                        if bm.id_user==id))[0]
+    return use.curr_page
