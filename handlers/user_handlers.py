@@ -36,3 +36,18 @@ async def process_beginning_command(message):
                 'forward'
             )
     )
+
+# Command /continue
+# sending user their current page
+@router.message(Command(commands='continue'))
+async def process_continue_command(message):
+    id = message.from_user.id
+    text = book[database.get_current_page(id)]
+    await message.answer(
+            text=text,
+            reply_markup=create_pagination_keyboard(
+                'backward',
+                f'{database.get_current_page(id)}/{len(book)}',
+                'forward'
+            )
+    )
