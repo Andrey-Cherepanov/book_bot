@@ -53,6 +53,7 @@ async def process_continue_command(message):
     )
 
 # Command /bookmarks
+# sending user a list of bookmarks
 @router.message(Command(commands='bookmarks'))
 async def process_continue_command(message):
     bookmarks = database.extract_bookmarks(message.from_user.id)
@@ -63,3 +64,22 @@ async def process_continue_command(message):
         )
     else:
         await message.answer(text=LEXICON['no_bookmarks'])
+
+# Key Forward on inline kb
+# sending user next page
+@router.callback_query(Text(text='forward'))
+async def process_forward_press(callback):
+    id = callback.from_user.id
+    page = database.get_current_page(id) + 1
+    if page < len(book):
+        database.set_current_page(id=id, page=page)
+        text = book[page]
+        await callback.message.edit_text(
+            text=text,
+            reply_markup=create_pagination_keyboard(
+                'backward',
+                f'{database.get_current_page(id)}/{len(book)}',
+                'forward'
+            )
+        )
+    await callback.answer()
