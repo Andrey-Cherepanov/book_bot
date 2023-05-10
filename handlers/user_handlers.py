@@ -107,7 +107,7 @@ async def process_forward_press(callback):
 # Key with current page on inline kb
 # add a new bookmark
 @router.callback_query(lambda x: '/' in x.data and x.data.replace('/', '').isdigit())
-async def process_bookmark_press(callback):
+async def process_page_press(callback):
     id = callback.from_user.id
     curr_page = database.get_current_page(id)
     database.add_bookmark(id, curr_page)
@@ -126,4 +126,22 @@ async def process_bookmark_press(callback):
                     'backward',
                     f'{int(callback.data)}/{len(book)}',
                     'forward'))
+    await callback.answer()
+
+# Key Edit
+# sending user an edit keyboard
+@router.callback_query(Text(text='edit_bookmarks'))
+async def process_edit_press(callback):
+    await callback.message.edit_text(
+        text=LEXICON[callback.data],
+        reply_markup=create_edit_keyboard(
+            *database.extract_bookmarks(callback.from_user.id)
+        )
+    )
+    await callback.answer()
+
+# Key Cancel
+@router.callback_query(Text(text='cancel'))
+async def process_cancel_press(callback: CallbackQuery):
+    await callback.message.edit_text(text=LEXICON['cancel_text'])
     await callback.answer()
