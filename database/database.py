@@ -35,7 +35,6 @@ def add_bookmark(id, bookmark):
                         if bm.id_user==id))[0]
     new_bookmarks = extract_bookmarks(id)
     new_bookmarks.add(bookmark)
-    print(new_bookmarks)
     new_bookmarks = ','.join(list(map(str, new_bookmarks)))
     user.bookmarks = new_bookmarks
 
@@ -51,3 +50,17 @@ def get_current_page(id):
     user = list(select(bm for bm in Bookmarks
                         if bm.id_user==id))[0]
     return use.curr_page
+
+@db_session
+def remove_bookmark(id, bookmark):
+    user = list(select(bm for bm in Bookmarks
+                        if bm.id_user==id))[0]
+    new_bookmarks = extract_bookmarks(id)
+    new_bookmarks.remove(bookmark)
+    if bookmarks:
+        new_bookmarks = ','.join(list(map(str, new_bookmarks)))
+    else:
+        new_bookmarks = ''
+    user.bookmarks = new_bookmarks
+
+    commit()
