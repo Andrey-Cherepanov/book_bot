@@ -15,6 +15,8 @@ def extract_bookmarks(id):
 
 @db_session
 def add_user(id, page=1):
+    if _is_user_in_db(id):
+        return
     user = Bookmarks(id_user=id,
                      curr_page=page,
                      bookmarks='')
@@ -38,3 +40,8 @@ def add_bookmark(id, bookmark):
     user.bookmarks = new_bookmarks
 
     commit()
+
+@db_session
+def _is_user_in_db(id):
+    ids = [usr.id_user for usr in list(select(usr for usr in Bookmarks))]
+    return id in ids
