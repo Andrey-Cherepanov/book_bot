@@ -56,7 +56,8 @@ def remove_bookmark(id, bookmark):
     user = list(select(bm for bm in Bookmarks
                         if bm.id_user==id))[0]
     new_bookmarks = extract_bookmarks(id)
-    new_bookmarks.remove(bookmark)
+    if bookmark in new_bookmarks:
+        new_bookmarks.remove(bookmark)
     if new_bookmarks:
         new_bookmarks = ','.join(list(map(str, new_bookmarks)))
     else:
